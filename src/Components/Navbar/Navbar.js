@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutAction } from "../../Redux/Action/Action";
 
 const Navbar = () => {
+  // currUSer get data from state of login User
   const currUser = useSelector((state) => state.loginuser);
   const navigate = useNavigate();
   const dispatch = useDispatch();

@@ -1,12 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import { Col, Row} from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-
-
 import '../../style/style.scss'
 import { getProductData } from "../../Api/ApiData";
 
@@ -32,7 +29,7 @@ const ProductItem = () => {
     <>
     <Navbar/>   
     <div className="container ">
-        <div className="project-Item-section d-flex flex-column align-items-center justify-content-center">
+        <div className="product-Item-section d-flex flex-column align-items-center justify-content-center">
       <Row>
         <Col>
           <Card className="cardbody">

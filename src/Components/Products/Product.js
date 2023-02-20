@@ -75,7 +75,7 @@ const Product = () => {
         <div className="row">
           <DataTable
             columns={columns}
-            title={"Desserts"}
+            title={"Product List"}
             data={products}
             fixedHeader
             fixedHeaderScrollHeight="600px"

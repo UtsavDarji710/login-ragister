@@ -14,7 +14,7 @@ body {
     background-color: #b9adad;
 }
 
-.project-Item-section{
+.product-Item-section{
     height: 820px;
     & .cardbody{
         display: flex;
@@ -35,3 +35,8 @@ body {
     background-color: white;
 }
 
+
+.dropdown-menu{
+    position: absolute !important; 
+    margin-left: -90px;
+}

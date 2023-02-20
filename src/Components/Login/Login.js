@@ -6,28 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "../../Redux/Action/Action";
 import bcrypt from "bcryptjs";
 import {  toast } from 'react-toastify';
+import { LoginSchema } from "../../Validation/Validation";
 import 'react-toastify/dist/ReactToastify.css';
 import "../../style/style.scss";
 
 const Login = () => {
+  // users get data from state of ragister User
   const users = useSelector((state) => state.ragisterusers);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address format")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Please Enter your password")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-      )
-      .required("Password is required"),
-  });
+  
 
 
   const handleSubmit = async (values) => {
+    // filter data if email is same
     const user = users.find((item) => item.email === values.email);
 
     if (!user) {
@@ -35,15 +27,16 @@ const Login = () => {
       return;
     }
 
+    // Compare current password with users password
     bcrypt.compare(values.password, user.password, function (err, isMatch) {
       if (err) {
         console.log("error");
       } else if (!isMatch) {
-        toast.error("Password not match");
+        toast.error("Password not match..!!");
       } else {
         dispatch(signInAction(users, values));
         navigate("/user/product");
-        toast.success("Login successfuly");
+        toast.success("Login successfuly..!!");
       }
     });
   };
@@ -121,7 +114,7 @@ const Login = () => {
               </div>
             )}
           </Formik>
-          <p>Need an Account? 
+          <p className="d-flex justify-content-center">Need an Account? 
             <Link to={"/"}>Sign UP</Link>
           </p>
         </div>

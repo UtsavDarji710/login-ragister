@@ -11,7 +11,9 @@ import bcrypt from "bcryptjs";
 
 //get All data
 export const getAllData = () => {
+  // in data getvalues or items from localstorage where key is Users
   let data = JSON.parse(localStorage.getItem("Users"));
+  // in data getvalues or items from localstorage where key is Auth_Users
   let authData = JSON.parse(localStorage.getItem("Auth_Users"));
 
   if (!data) {
@@ -39,23 +41,24 @@ export const getAllData = () => {
   };
 };
 
-//add cart action
+//SIGN UP
 export const signUpAction = (items, data) => {
 
   const id = uuidv4();
 
+  //encrypt password using bcrypt
   let salt = bcrypt.genSaltSync(10);
   let encrypass = bcrypt.hashSync(data.password, salt);
-  console.log("Encrypted2 password : ", encrypass);
 
   let newUser = { ...data, id, password: encrypass };
+  // delete ConfirmPassword of newUser for not store in localStorage
   delete newUser.ConfirmPassword;
 
   let newData = [...items, { ...newUser }];
 
   localStorage.setItem("Users", JSON.stringify(newData));
   localStorage.setItem(
-    "Auth_User",
+    "Auth_Users",
     JSON.stringify({ auth: true, user: { ...newUser } })
   );
   return {
@@ -68,46 +71,46 @@ export const signUpAction = (items, data) => {
   };
 };
 
-// Login item action
+// Login 
 export const signInAction = (items, values) => {
-  const arr = items.filter((item) => item.email === values.email);
-  console.log("sign in arr: ",{...arr})
+  //filter data if email is same
+  const filterdata = items.filter((item) => item.email === values.email);
 
   localStorage.setItem(
-    "Auth_User",
-    JSON.stringify({ auth: true, user: { ...arr[0] } })
+    "Auth_Users",
+    JSON.stringify({ auth: true, user: { ...filterdata[0] } })
   );
 
   return {
     type: SIGN_IN,
     payload: {
-      currUser: { ...arr[0] },
+      loginuser: { ...filterdata[0] },
       auth: true,
     },
   };
 };
 
-//get all data
+//EDIT PROFILE
 export const editProfile = (users, values) => {
-  const arr = users.map((data) => {
+  // if id of user and id of values same than return values
+  const editedData = users.map((data) => {
     if (data.id === values.id) {
       return { ...values };
     } else {
       return data;
     }
   });
-  console.log("Arr:", arr);
 
-  localStorage.setItem("Users", JSON.stringify(arr));
+  localStorage.setItem("Users", JSON.stringify(editedData));
   localStorage.setItem(
-    "Auth_User",
+    "Auth_Users",
     JSON.stringify({ auth: true, user: { ...values } })
   );
 
   return {
     type: EDIT_PROFILE_DATA,
     payload: {
-      users: arr,
+      users: editedData,
       currUser: values,
     },
   };
@@ -115,10 +118,13 @@ export const editProfile = (users, values) => {
 
 export const changepassword = (users, id, values) => {
   let changepass = {};
+
+  //encrypt password using bcrypt
   let salt = bcrypt.genSaltSync(10);
   let encryptPass = bcrypt.hashSync(values.newpassword, salt);
 
-  const arr = users.map((data) => {
+  // if id of user and id of items same than return data and with new encrpted password 
+  const changepassdata = users.map((data) => {
     if (data.id === id) {
       changepass = { ...data, password: encryptPass };
 
@@ -127,18 +133,19 @@ export const changepassword = (users, id, values) => {
       return data;
     }
   });
-  delete arr.ConfirmPassword;
+  // delete confirmPassword
+  delete changepassdata.ConfirmPassword;
 
-  localStorage.setItem("Users", JSON.stringify([...arr]));
+  localStorage.setItem("Users", JSON.stringify([...changepassdata]));
   localStorage.setItem(
-    "Auth_User",
+    "Auth_Users",
     JSON.stringify({ auth: true, user: { ...changepass } })
   );
 
   return {
     type: CHANGE_PASSWORD,
     payload: {
-      users: arr,
+      users: changepassdata,
       currUser: { ...changepass },
       auth: true,
     },
@@ -146,7 +153,7 @@ export const changepassword = (users, id, values) => {
 };
 
 export const logoutAction = () => {
-  localStorage.setItem("Auth_User", JSON.stringify({ auth: false, user: {} }));
+  localStorage.setItem("Auth_Users", JSON.stringify({ auth: false, user: {} }));
   return {
     type: LOG_OUT,
     payload: {},

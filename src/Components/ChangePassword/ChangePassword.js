@@ -5,41 +5,28 @@ import {  useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changepassword } from "../../Redux/Action/Action";
 import {  toast } from 'react-toastify';
+import { ChnagePassSchema } from "../../Validation/Validation";
 import 'react-toastify/dist/ReactToastify.css';
 import bcrypt from "bcryptjs";
 
 const ChangePassword = () => {
+  // users get data from state of ragister User
   const users = useSelector((state) => state.ragisterusers);
+
+  // currUSer get data from state of login User
   const currUSer = useSelector((state) => state.loginuser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const LoginSchema = Yup.object().shape({
-    currpassword: Yup.string()
-      .min(8, "Password must be 8 characters at minimum")
-      .required("Password is required"),
-    newpassword: Yup.string()
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-      )
-      .required("Password is required"),
-    ConfirmPassword: Yup.string()
-      .oneOf([Yup.ref("newpassword"), null], "Password does not match")
-      .required("ConfirmPassword is required"),
-  });
-
-
   const handleSubmit = async (values) => {
     const getpass = currUSer.password;
 
-    console.log("getpass: ", getpass)
-
-    console.log("values currpassword: ", values.currpassword);
-
+    // Compare with given value of current password with and localstorage of password
     const currMatch = await bcrypt.compare(values.currpassword, getpass);
 
     if (currMatch) {
+
+      // Compare with given value of new password with and localstorage of password
       const currMatch1 = await bcrypt.compare(values.newpassword, getpass);
 
       if (currMatch1) {
@@ -66,11 +53,10 @@ const ChangePassword = () => {
               newpassword: "",
               ConfirmPassword: "",
             }}
-            validationSchema={LoginSchema}
+            validationSchema={ChnagePassSchema}
             onSubmit={handleSubmit}
           >
             {({ touched, errors, isSubmitting, values }) => (
-              // !isSubmitting ? (
               <div>
                 <div className="row mb-5">
                   <div className="col-lg-12 text-center">
@@ -147,11 +133,11 @@ const ChangePassword = () => {
                   </div>
                   <button
                     type="submit"
-                    className="btn btn-primary btn-block mt-4"
+                    className="btn btn-primary btn-block mt-4 me-2"
                   >
                     Submit
                   </button>
-                  <button onClick={() => navigate("/user/product")}>Back</button>
+                  <button className="btn btn-primary btn-block mt-4" onClick={() => navigate("/user/product")}>Back</button>
                 </Form>
               </div>
             )}

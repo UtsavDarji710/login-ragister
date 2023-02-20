@@ -20,7 +20,7 @@ const Reducer = (state = initialState, action) => {
         return {
          ...state,
          ragisterusers : [...action.payload.users],
-         loginuser: {...action.payload.loginuser}
+         loginuser: {...action.payload.currUser}
         };
     
     case SIGN_IN:

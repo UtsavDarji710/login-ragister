@@ -5,50 +5,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpAction } from "../../Redux/Action/Action";
 import {  toast } from 'react-toastify';
+import {SignUpSchema } from '../../Validation/Validation'
 import 'react-toastify/dist/ReactToastify.css';
 import '../../style/style.scss'
 
 const SignUp = () => {
+  // users get data from state of ragister User
   const users = useSelector((state) => state.ragisterusers);
-  console.log("Signup users : ", users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const LoginSchema = Yup.object().shape({
-    firstName: Yup.string().required("firstname is required"),
-    lastName: Yup.string().required("lastName is required"),
-    email: Yup.string()
-      .matches(
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Invalid email address format"
-      )
-      .email("Invalid email address format")
-      .required("Email is required"),
-    MobileNumber: Yup.string()
-      .min(10, "MobileNumber is must be 10 number")
-      .max(10, "MobileNumber is must be 10 number")
-      .required("MobileNumber is required"),
-    password: Yup.string()
-      .required('Please Enter your password')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-      )
-      .required("Password is required"),
-    ConfirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Password does not match")
-      .required("ConfirmPassword is required"),
-  });
 
   const handleSubmit = (values) => {
-
+    // filter data if email is same
     const arr = users.filter((item) => item.email === values.email);
     if (arr.length === 0) {
       dispatch(signUpAction(users, values));
       navigate("/login");
-      toast.success("Sign Up Success")
+      toast.success("Sign Up Successfully..!!")
     } else {
-      toast.error("Email is Already in use");
+      toast.error("Email is Already in use..!!");
     }
   };
 
@@ -65,7 +41,7 @@ const SignUp = () => {
               password: "",
               ConfirmPassword: "",
             }}
-            validationSchema={LoginSchema}
+            validationSchema={SignUpSchema}
             onSubmit={handleSubmit}
           >
             {
@@ -205,7 +181,7 @@ const SignUp = () => {
                     </div>
                     <button
                       type="submit"
-                      className="btn btn-primary btn-block mt-4"
+                      className="btn btn-primary btn-block mt-4 "
                     >
                       Submit
                     </button>
@@ -215,7 +191,7 @@ const SignUp = () => {
             }
             
           </Formik>
-          <p>Already a user? 
+          <p className="d-flex justify-content-center">Already a user? 
             <Link to={"/login"}>Login</Link>
           </p>
         </div>

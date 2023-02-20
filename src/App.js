@@ -14,13 +14,14 @@ import ProtectedRouter from "./ProtectedRouter/ProtectedRouter";
 function App() {
   const dispatch = useDispatch();
 
+  //everytime getAllData function render
   useEffect(() => {
     dispatch(getAllData());
   }, [dispatch]);
 
+  //get a userToken as auth from state
   const userToken = useSelector((state) => state.auth);
 
-  console.log("is logged auth: ", userToken);
   return (
     <div className="App">
       <BrowserRouter>
@@ -30,7 +31,7 @@ function App() {
           <Route
             path="/user/product"
             element={
-              <ProtectedRouter isAuth={userToken}>
+              <ProtectedRouter auth={userToken}>
                 <Product />
               </ProtectedRouter>
             }
@@ -38,7 +39,7 @@ function App() {
           <Route
             path="/user/editprofile"
             element={
-              <ProtectedRouter isAuth={userToken}>
+              <ProtectedRouter auth={userToken}>
                 <Profile />
               </ProtectedRouter>
             }
@@ -46,7 +47,7 @@ function App() {
           <Route
             path="/user/changepassword"
             element={
-              <ProtectedRouter isAuth={userToken}>
+              <ProtectedRouter auth={userToken}>
                 <ChangePassword />
               </ProtectedRouter>
             }
@@ -54,7 +55,7 @@ function App() {
           <Route
             path="/user/product/:id"
             element={
-              <ProtectedRouter isAuth={userToken}>
+              <ProtectedRouter auth={userToken}>
                 <ProductItem />
               </ProtectedRouter>
             }
